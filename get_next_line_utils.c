@@ -6,71 +6,73 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:26 by gastesan          #+#    #+#             */
-/*   Updated: 2025/11/06 18:04:58 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/11/06 19:51:32 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strnlen(char	*buffer, size_t n)
+ssize_t	get_nl_index(const t_buffer *buffer)
 {
-	size_t	len;
-
-	len = 0;
-	while (len < n && buffer[len])
-		len++;
-	return (len);
-}
-
-ssize_t	get_nl_index(const char *buffer, size_t n)
-{
-	size_t	i;
+	ssize_t	i;
 
 	i = 0;
-	while (i < n)
+	while (i < buffer->len)
 	{
-		if (buffer[i] == '\n')
-			return ((ssize_t) i);
+		if (buffer->data[i] == '\n')
+			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-char	*ft_strncat(char *str, size_t str_len, char *buffer, size_t n)
+void	ft_strncat(t_str *dst, const t_buffer *src, const size_t n)
 {
-	char	*res;
+	char	*new_data;
 	size_t	i;
 	size_t	j;
 
-	res = malloc(str_len + n + 1);
-	if (!res)
-		return (NULL);
+	new_data = malloc(dst->len + n + 1);
+	if (!new_data)
+		return (free(dst->data));
 	i = 0;
-	while (i < str_len)
+	while (i < dst->len)
 	{
-		res[i] = str[i];
+		new_data[i] = dst->data[i];
 		i++;
 	}
 	j = 0;
-	while (j < n)
+	while (j < n && src->data[j])
 	{
-		res[i + j] = buffer[j];
+		new_data[i + j] = src->data[j];
 		j++;
 	}
-	res[i + j] = '\0';
-	free(str);
-	return (res);
+	new_data[i + j] = '\0';
+	free(dst->data);
+	dst->data = new_data;
+	dst->len = i + j;
 }
 
-void	reset_buffer(char *buffer, ssize_t nl_index)
+void	move_buffer(t_buffer *buffer, const size_t index)
 {
-	size_t	i;
-	size_t	j;
+	ssize_t	i;
+	ssize_t	j;
 
 	i = 0;
-	j = (size_t) (nl_index + 1);
-	while (j < BUFFER_SIZE)
-		buffer[i++] = buffer[j++];
+	j = (ssize_t) index;
+	while (j < buffer->len)
+		buffer->data[i++] = buffer->data[j++];
+	buffer->len = i;
 	while (i < BUFFER_SIZE)
-		buffer[i++] = '\0';
+		buffer->data[i++] = '\0';
+}
+
+void	reset_buffer(t_buffer *buffer)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE)
+		buffer->data[i++] = '\0';
+	buffer->len = 0;
 }

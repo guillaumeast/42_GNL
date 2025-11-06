@@ -6,47 +6,48 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:18 by gastesan          #+#    #+#             */
-/*   Updated: 2025/11/06 18:27:01 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/11/06 20:23:28 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "get_next_line.h"
 
+static void init_str(t_str *str)
+{
+	str->data = NULL;
+	str->len = 0;
+}
+
 char	*get_next_line(int fd)
 {
-	static char	buffer[BUFFER_SIZE];
-	ssize_t		read_bytes;
-	char		*res;
-	size_t		res_len;
-	ssize_t		nl_index;
+	static t_buffer	buffer;
+	t_str			res;
+	ssize_t			nl_index;
 
 	if (fd == -1)
 		return (NULL);
-	res = NULL;
-	res_len = 0;
-	read_bytes = ft_strnlen(buffer, BUFFER_SIZE);
-	if (read_bytes == 0)
-		read_bytes = read(fd, buffer, BUFFER_SIZE);
-	while (read_bytes > 0)
+	init_str(&res);
+	if (buffer.len == 0)
+		buffer.len = read(fd, buffer.data, BUFFER_SIZE);
+	while (buffer.len > 0)
 	{
-		nl_index = get_nl_index(buffer, read_bytes);
+		nl_index = get_nl_index(&buffer);
 		if (nl_index >= 0)
 		{
-			res = ft_strncat(res, res_len, buffer, nl_index + 1);
-			reset_buffer(buffer, nl_index);
-			read_bytes -= nl_index + 1;
-			return (res);
+			ft_strncat(&res, &buffer, (size_t)(nl_index + 1));
+			move_buffer(&buffer, (size_t)(nl_index + 1));
+			return (res.data);
 		}
-		res = ft_strncat(res, res_len, buffer, read_bytes);
-		res_len += (size_t) read_bytes;
-		reset_buffer(buffer, nl_index);
-		read_bytes = read(fd, buffer, BUFFER_SIZE);
+		ft_strncat(&res, &buffer, (size_t)buffer.len);
+		if (!res.data)
+			return (NULL);
+		reset_buffer(&buffer);
+		buffer.len = read(fd, buffer.data, BUFFER_SIZE);
 	}
-	if (read_bytes == -1)
+	if (buffer.len == -1)
 	{
-		if (res)
-			free(res);
+		free(res.data);
 		return (NULL);
 	}
-	return (res);
+	return (res.data);
 }
