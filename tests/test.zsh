@@ -1,12 +1,12 @@
 #!/usr/bin/env zsh
 
 target="test_gnl"
-buffer_size_values=(0 1 2 10 42 1000 9999 10000000)
+files=("get_next_line.c" "get_next_line_utils.c" "get_next_line.h")
+buffer_size_values=(1 2 3 4 5 10 42 1000 9999 10000000)
 
-tests_dir="tests"
-inputs_dir="${tests_dir}/inputs"
-expected_dir="${tests_dir}/expected"
-output_dir="${tests_dir}/outputs"
+inputs_dir="inputs"
+expected_dir="expected"
+output_dir="outputs"
 
 passed=0
 failed=0
@@ -14,9 +14,12 @@ total=0
 
 main()
 {
+	echo
 	init
+	check_files
 	# Test each buffer_size
-	for buffer_size in $buffer_size_values; do
+	for buffer_size in "${buffer_size_values[@]}"; do
+		echo "👉 Testing with BUFFER_SIZE=$buffer_size..."
 		compile $buffer_size
 
 		# Test each input_file
@@ -28,12 +31,12 @@ main()
 
 			# Test with file as argument
 			./"${target}" "${input_file}" | cat -e > "${output_file}"
-			check_output "./${target} ${input_file}" "${expected_file}" "${output_file}"
+			check_output "BUFFER_SIZE=$buffer_size\n./${target} ${input_file} | cat -e" "${expected_file}" "${output_file}"
 
 			# Test with file as stdin
 			output_file="${output_dir}/stdin_${filename}"
 			cat "${input_file}" | ./"${target}" | cat -e > "${output_file}"
-			check_output "cat ${input_file} | ./${target}" "${expected_file}" "${output_file}"
+			check_output "cat ${input_file} | ./${target} | cat -e" "${expected_file}" "${output_file}"
 		done
 	done
 	print_results
@@ -42,8 +45,19 @@ main()
 init()
 {
 	rm -f "${target}"
-	rm -r "${output_dir}" || true
+	rm -rf "${output_dir}" || true
 	mkdir -p "${output_dir}"
+}
+
+check_files()
+{
+	echo "👉 Checking files..."
+	for f in "${files[@]}"; do
+		if [[ ! -f ../"${f}" ]]; then
+			echo "❌ ${f} not found"
+			exit 1
+		fi
+	done
 }
 
 compile()
@@ -53,6 +67,16 @@ compile()
 	cc -Wall -Wextra -Werror -D BUFFER_SIZE=$buffer_size \
 		main.c ../get_next_line.c ../get_next_line_utils.c -I.. \
 			-o "${target}"
+	if [[ $? -ne 0 ]]; then
+		echo "❌ Compilation failed for BUFFER_SIZE=$buffer_size"
+		exit 1
+	elif [[ ! -f "${target}" ]]; then
+		echo "❌ ${target} not found"
+		exit 1
+	elif [[ ! -x "${target}" ]]; then
+		echo "❌ ${target} is not executable"
+		exit 2
+	fi
 }
 
 check_output()
