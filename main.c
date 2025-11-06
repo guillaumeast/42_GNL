@@ -1,20 +1,30 @@
 #include <stdio.h>
 #include "get_next_line.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
 
-	fd = open("test.txt", O_RDONLY);
-	while (1)
+	if (argc > 2)
 	{
-		line = get_next_line(fd);
-		if (!line)
-			break;
-		printf("%s\n", line);
-		free(line);
+		fprintf(stderr, "Usage for stdin parsing: ./a.out\n");
+		fprintf(stderr, "Usage for file parsing:  ./a.out <filepath>\n");
+		return (1);
 	}
-	close(fd);
+	if (argc == 2)
+	{
+		fd = open(argv[1], O_RDONLY);
+		while (1)
+		{
+			line = get_next_line(fd);
+			if (!line)
+				break;
+			printf("%s", line);
+			fflush(stdout);
+			free(line);
+		}
+		close(fd);
+	}
 	return (0);
 }
