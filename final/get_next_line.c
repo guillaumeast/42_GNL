@@ -6,7 +6,7 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:31:54 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/14 00:39:34 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/14 00:57:41 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "get_next_line.h"
 
 t_buffer	*get_buffer(t_stash **stashs_head, int fd);
-t_stash	*stash_add(t_stash **stashs_head, int fd);
+t_stash		*stash_add(t_stash **stashs_head, int fd);
 void		stash_remove(t_stash **stashs_head, int fd);
 char		*parse_line(int fd, t_buffer *buffer, t_line *line);
 
@@ -35,6 +35,12 @@ char	*get_next_line(int fd)
 	line.len = 0;
 	line.cap = 0;
 	ret = parse_line(fd, buffer, &line);
+	if (buffer->len == -1)
+	{
+		free(line.data);
+		line.data = NULL;
+		ret = NULL;
+	}
 	if (!ret || buffer->len == 0)
 		stash_remove(&stashs_head, fd);
 	return (ret);
@@ -137,6 +143,6 @@ char	*parse_line(int fd, t_buffer *buffer, t_line *line)
 		buffer->len = read(fd, buffer->data, BUFFER_SIZE);
 	}
 	if (buffer->len == -1)
-		return (free(line->data), NULL);
+		return (NULL);
 	return (line->data);
 }
