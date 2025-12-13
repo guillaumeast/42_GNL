@@ -6,22 +6,24 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:31:54 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/14 00:13:38 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/14 00:39:34 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// TODO: linetore 'static' keywords for local functions
+
 #include "get_next_line.h"
 
-static t_buffer	*get_buffer(t_stash **stashs_head, int fd);
-static t_stash	*stash_add(t_stash **stashs_head, int fd);
-static void		stash_remove(t_stash **stashs_head, int fd);
-static char		*parse_line(int fd, t_buffer *b, t_line *res);
+t_buffer	*get_buffer(t_stash **stashs_head, int fd);
+t_stash	*stash_add(t_stash **stashs_head, int fd);
+void		stash_remove(t_stash **stashs_head, int fd);
+char		*parse_line(int fd, t_buffer *buffer, t_line *line);
 
 char	*get_next_line(int fd)
 {
 	static t_stash	*stashs_head;
 	t_buffer		*buffer;
-	t_line			res;
+	t_line			line;
 	char			*ret;
 
 	if (fd < 0)
@@ -29,16 +31,18 @@ char	*get_next_line(int fd)
 	buffer = get_buffer(&stashs_head, fd);
 	if (!buffer)
 		return (NULL);
-	res.data = NULL;
-	res.len = 0;
-	res.cap = 0;
-	ret = parse_line(fd, buffer, &res);
+	line.data = NULL;
+	line.len = 0;
+	line.cap = 0;
+	ret = parse_line(fd, buffer, &line);
 	if (!ret || buffer->len == 0)
 		stash_remove(&stashs_head, fd);
 	return (ret);
 }
+// if (ret && line.cap > line.len + 1)
+// 	line_realloc(&line, line.len + 1);
 
-static t_buffer	*get_buffer(t_stash **stashs_head, int fd)
+t_buffer	*get_buffer(t_stash **stashs_head, int fd)
 {
 	t_stash	*stash;
 	t_stash	*new_stash;
@@ -58,7 +62,7 @@ static t_buffer	*get_buffer(t_stash **stashs_head, int fd)
 	return (&new_stash->buffer);
 }
 
-static t_stash	*stash_add(t_stash **stashs_head, int fd)
+t_stash	*stash_add(t_stash **stashs_head, int fd)
 {
 	t_stash	*new_stash;
 	t_stash	*last_stash;
@@ -81,7 +85,7 @@ static t_stash	*stash_add(t_stash **stashs_head, int fd)
 	return (new_stash);
 }
 
-static void	stash_remove(t_stash **stashs_head, int fd)
+void	stash_remove(t_stash **stashs_head, int fd)
 {
 	t_stash	*stash;
 	t_stash	*next;
@@ -109,30 +113,30 @@ static void	stash_remove(t_stash **stashs_head, int fd)
 	free(next);
 }
 
-static char	*parse_line(int fd, t_buffer *b, t_line *res)
+char	*parse_line(int fd, t_buffer *buffer, t_line *line)
 {
 	ssize_t	nl_index;
 
-	if (b->len <= 0)
-		b->len = read(fd, b->data, BUFFER_SIZE);
-	while (b->len > 0)
+	if (buffer->len <= 0)
+		buffer->len = read(fd, buffer->data, BUFFER_SIZE);
+	while (buffer->len > 0)
 	{
-		nl_index = get_index_n(b->data, '\n', (size_t)b->len);
+		nl_index = get_index_n(buffer->data, '\n', (size_t)buffer->len);
 		if (nl_index >= 0)
 		{
-			line_add(res, b, (size_t)(nl_index + 1));
-			if (!res->data)
+			line_add(line, buffer, (size_t)(nl_index + 1));
+			if (!line->data)
 				return (NULL);
-			buffer_move(b, (size_t)(nl_index + 1));
-			return (res->data);
+			buffer_move(buffer, (size_t)(nl_index + 1));
+			return (line->data);
 		}
-		line_add(res, b, (size_t)b->len);
-		if (!res->data)
+		line_add(line, buffer, (size_t)buffer->len);
+		if (!line->data)
 			return (NULL);
-		buffer_reset(b);
-		b->len = read(fd, b->data, BUFFER_SIZE);
+		buffer_reset(buffer);
+		buffer->len = read(fd, buffer->data, BUFFER_SIZE);
 	}
-	if (b->len == -1)
-		return (free(res->data), NULL);
-	return (res->data);
+	if (buffer->len == -1)
+		return (free(line->data), NULL);
+	return (line->data);
 }
