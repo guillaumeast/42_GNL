@@ -6,7 +6,7 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:26 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 15:53:59 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:27:15 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ static bool	str_grow(t_str *str, size_t required_cap)
 	size_t	new_cap;
 	char	*new_data;
 	size_t	i;
-	
+
 	if (str->cap >= required_cap)
 		return (true);
 	if (str->cap == 0)
 		new_cap = STR_INITIAL_SIZE;
 	else
-	 	new_cap = str->cap;
+		new_cap = str->cap;
 	while (new_cap < required_cap)
 		new_cap *= 2;
 	new_data = malloc(new_cap);

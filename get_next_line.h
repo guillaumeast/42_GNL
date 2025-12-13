@@ -1,5 +1,17 @@
-#ifndef GNL_H
-# define GNL_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/13 17:27:55 by gastesan          #+#    #+#             */
+/*   Updated: 2025/12/13 17:28:44 by gastesan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <fcntl.h>
 # include <stdbool.h>
@@ -7,9 +19,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 512
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 512
+# endif
 
 typedef struct s_str
 {

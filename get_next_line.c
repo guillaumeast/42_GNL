@@ -6,11 +6,11 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:18 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 15:28:54 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:27:41 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "get_next_line.h"
+#include "get_next_line.h"
 
 static char		*parse_line(int fd, t_buffer *buffer, t_str *res);
 static ssize_t	get_nl_index(const t_buffer *buffer);
@@ -28,7 +28,7 @@ char	*get_next_line(int fd)
 	return (parse_line(fd, &buffer, &res));
 }
 
-static char *parse_line(int fd, t_buffer *buffer, t_str *res)
+static char	*parse_line(int fd, t_buffer *buffer, t_str *res)
 {
 	ssize_t	nl_index;
 
