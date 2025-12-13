@@ -6,13 +6,16 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:18 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 14:38:23 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 15:28:54 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "get_next_line.h"
 
-static char *parse_line(int fd, t_buffer *buffer, t_str *res);
+static char		*parse_line(int fd, t_buffer *buffer, t_str *res);
+static ssize_t	get_nl_index(const t_buffer *buffer);
+static void		buffer_move(t_buffer *buffer, size_t index);
+static void		buffer_reset(t_buffer *buffer);
 
 char	*get_next_line(int fd)
 {
@@ -52,4 +55,42 @@ static char *parse_line(int fd, t_buffer *buffer, t_str *res)
 		return (NULL);
 	}
 	return (res->data);
+}
+
+static ssize_t	get_nl_index(const t_buffer *buffer)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (i < buffer->len)
+	{
+		if (buffer->data[i] == '\n')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+static void	buffer_move(t_buffer *buffer, size_t index)
+{
+	ssize_t	i;
+	ssize_t	j;
+
+	i = 0;
+	j = (ssize_t) index;
+	while (j < buffer->len)
+		buffer->data[i++] = buffer->data[j++];
+	buffer->len = i;
+	while (i < BUFFER_SIZE)
+		buffer->data[i++] = '\0';
+}
+
+static void	buffer_reset(t_buffer *buffer)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE)
+		buffer->data[i++] = '\0';
+	buffer->len = 0;
 }
