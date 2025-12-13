@@ -6,38 +6,18 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:26 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 14:46:52 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 17:31:05 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+static void	str_free(t_str *str);
+
 void	str_init(t_str *str)
 {
 	str->data = NULL;
 	str->len = 0;
-}
-
-void	str_free(t_str *str)
-{
-	if (str->data)
-		free(str->data);
-	str->data = NULL;
-	str->len = 0;
-}
-
-ssize_t	get_nl_index(const t_buffer *buffer)
-{
-	ssize_t	i;
-
-	i = 0;
-	while (i < buffer->len)
-	{
-		if (buffer->data[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (-1);
 }
 
 void	ft_strncat(t_str *dst, const t_buffer *src, size_t n)
@@ -65,6 +45,14 @@ void	ft_strncat(t_str *dst, const t_buffer *src, size_t n)
 	free(dst->data);
 	dst->data = new_data;
 	dst->len = i + j;
+}
+
+static void	str_free(t_str *str)
+{
+	if (str->data)
+		free(str->data);
+	str->data = NULL;
+	str->len = 0;
 }
 
 void	buffer_move(t_buffer *buffer, size_t index)
