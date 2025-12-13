@@ -6,15 +6,13 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:26 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 20:31:34 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 22:36:59 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
 #define STR_INITIAL_SIZE 128
-
-static void	str_free(t_str *str);
 
 ssize_t	get_nl_index(const t_buffer *buffer)
 {
@@ -62,7 +60,7 @@ void	ft_strncat(t_str *dst, const t_buffer *src, size_t n)
 
 	new_data = malloc(dst->len + n + 1);
 	if (!new_data)
-		return (str_free(dst));
+		return (free(dst->data), dst->data = NULL, dst->len = 0, (void)dst);
 	i = 0;
 	while (i < dst->len)
 	{
@@ -79,12 +77,4 @@ void	ft_strncat(t_str *dst, const t_buffer *src, size_t n)
 	free(dst->data);
 	dst->data = new_data;
 	dst->len = i + j;
-}
-
-static void	str_free(t_str *str)
-{
-	if (str->data)
-		free(str->data);
-	str->data = NULL;
-	str->len = 0;
 }
