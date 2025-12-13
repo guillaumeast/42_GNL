@@ -6,11 +6,11 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:26 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 19:08:44 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 20:31:51 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 #define STR_INITIAL_SIZE 128
 
