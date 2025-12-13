@@ -2,3 +2,4 @@ a.out
 get_next_line.h.pch
 tests/test_gnl
 tests/outputs
+todo.md

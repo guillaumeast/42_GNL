@@ -6,48 +6,50 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:18 by gastesan          #+#    #+#             */
-/*   Updated: 2025/11/06 20:23:28 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 14:38:23 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "get_next_line.h"
 
-static void init_str(t_str *str)
-{
-	str->data = NULL;
-	str->len = 0;
-}
+static char *parse_line(int fd, t_buffer *buffer, t_str *res);
 
 char	*get_next_line(int fd)
 {
 	static t_buffer	buffer;
 	t_str			res;
-	ssize_t			nl_index;
 
-	if (fd == -1)
+	if (fd < 0)
 		return (NULL);
-	init_str(&res);
-	if (buffer.len == 0)
-		buffer.len = read(fd, buffer.data, BUFFER_SIZE);
-	while (buffer.len > 0)
+	str_init(&res);
+	return (parse_line(fd, &buffer, &res));
+}
+
+static char *parse_line(int fd, t_buffer *buffer, t_str *res)
+{
+	ssize_t	nl_index;
+
+	if (buffer->len <= 0)
+		buffer->len = read(fd, buffer->data, BUFFER_SIZE);
+	while (buffer->len > 0)
 	{
-		nl_index = get_nl_index(&buffer);
+		nl_index = get_nl_index(buffer);
 		if (nl_index >= 0)
 		{
-			ft_strncat(&res, &buffer, (size_t)(nl_index + 1));
-			move_buffer(&buffer, (size_t)(nl_index + 1));
-			return (res.data);
+			ft_strncat(res, buffer, (size_t)(nl_index + 1));
+			buffer_move(buffer, (size_t)(nl_index + 1));
+			return (res->data);
 		}
-		ft_strncat(&res, &buffer, (size_t)buffer.len);
-		if (!res.data)
+		ft_strncat(res, buffer, (size_t)buffer->len);
+		if (!res->data)
 			return (NULL);
-		reset_buffer(&buffer);
-		buffer.len = read(fd, buffer.data, BUFFER_SIZE);
+		buffer_reset(buffer);
+		buffer->len = read(fd, buffer->data, BUFFER_SIZE);
 	}
-	if (buffer.len == -1)
+	if (buffer->len == -1)
 	{
-		free(res.data);
+		free(res->data);
 		return (NULL);
 	}
-	return (res.data);
+	return (res->data);
 }

@@ -6,11 +6,25 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 17:41:26 by gastesan          #+#    #+#             */
-/*   Updated: 2025/11/06 19:51:32 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/13 14:46:52 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	str_init(t_str *str)
+{
+	str->data = NULL;
+	str->len = 0;
+}
+
+void	str_free(t_str *str)
+{
+	if (str->data)
+		free(str->data);
+	str->data = NULL;
+	str->len = 0;
+}
 
 ssize_t	get_nl_index(const t_buffer *buffer)
 {
@@ -26,7 +40,7 @@ ssize_t	get_nl_index(const t_buffer *buffer)
 	return (-1);
 }
 
-void	ft_strncat(t_str *dst, const t_buffer *src, const size_t n)
+void	ft_strncat(t_str *dst, const t_buffer *src, size_t n)
 {
 	char	*new_data;
 	size_t	i;
@@ -34,7 +48,7 @@ void	ft_strncat(t_str *dst, const t_buffer *src, const size_t n)
 
 	new_data = malloc(dst->len + n + 1);
 	if (!new_data)
-		return (free(dst->data));
+		return (str_free(dst));
 	i = 0;
 	while (i < dst->len)
 	{
@@ -53,7 +67,7 @@ void	ft_strncat(t_str *dst, const t_buffer *src, const size_t n)
 	dst->len = i + j;
 }
 
-void	move_buffer(t_buffer *buffer, const size_t index)
+void	buffer_move(t_buffer *buffer, size_t index)
 {
 	ssize_t	i;
 	ssize_t	j;
@@ -67,7 +81,7 @@ void	move_buffer(t_buffer *buffer, const size_t index)
 		buffer->data[i++] = '\0';
 }
 
-void	reset_buffer(t_buffer *buffer)
+void	buffer_reset(t_buffer *buffer)
 {
 	size_t	i;
 
