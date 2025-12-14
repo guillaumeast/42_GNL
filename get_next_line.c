@@ -6,7 +6,7 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:31:54 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/14 01:16:29 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/14 01:24:12 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,8 @@ char	*get_next_line(int fd)
 	line.len = 0;
 	line.cap = 0;
 	success = parse_line(fd, buffer, &line);
-	// Début de la section que je veux ajouter
 	if (success && line.cap > line.len + 1)
 		line_realloc(&line, line.len + 1);
-	// Fin de la section que je veux ajouter
 	if (!success)
 	{
 		free(line.data);

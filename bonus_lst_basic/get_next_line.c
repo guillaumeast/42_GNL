@@ -1,1 +1,0 @@
-../mandatory_basic/get_next_line.c
