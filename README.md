@@ -19,7 +19,7 @@
 
 ### TL;DR
 
-`get_next_line` is an implementation of a line-by-line reader for file descriptors.  
+`get_next_line` is an implementation of a line-by-line reader for file descriptors (`fd`).  
 
 ### Precisions
 
@@ -52,7 +52,7 @@ cc get_next_line.c get_next_line_utils.c <your_main.c>
 
 ### Usage
 
-Call `get_next_line(fd)` to get the next line of a given `fd` (You can use as many `fd`s you want, in any order).  
+Call `get_next_line(fd)` to get the next line of a given `fd` (You can use as many `fd` you want, in any order).  
 When end of file (`EOF`) is reached or if an error occurs, `get_next_line(fd)` will return `NULL`.  
 
 ### Example
@@ -150,6 +150,5 @@ AI was used only to:
 - reason about architectural approaches,
 - clarify tester/compiler logs,
 - refine explanations during debugging,
-- format this README based on detailed instructions I provided.  
 
 **All technical decisions and implementations are original.**
