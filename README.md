@@ -138,9 +138,11 @@ This ensures:
 - **O(n)** total complexity per returned line (where *n* is the length of the returned line)  
   _(Each character is copied at most once thanks to exponential buffer growth.)_
 ## 📚 Resources
-- `man 2 read` (RTFM 🙈)
+- `man 2 read`
 - Project subject
 - Norm.v4
+
+> RTFM 🤓
 
 ## 🤖 AI usage notice
 
