@@ -6,25 +6,25 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:31:54 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/14 00:57:41 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/14 01:16:29 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// TODO: linetore 'static' keywords for local functions
+// TODO: restore 'static' keywords for local functions
 
 #include "get_next_line.h"
 
 t_buffer	*get_buffer(t_stash **stashs_head, int fd);
 t_stash		*stash_add(t_stash **stashs_head, int fd);
 void		stash_remove(t_stash **stashs_head, int fd);
-char		*parse_line(int fd, t_buffer *buffer, t_line *line);
+bool		parse_line(int fd, t_buffer *buffer, t_line *line);
 
 char	*get_next_line(int fd)
 {
 	static t_stash	*stashs_head;
 	t_buffer		*buffer;
 	t_line			line;
-	char			*ret;
+	bool			success;
 
 	if (fd < 0)
 		return (NULL);
@@ -34,19 +34,20 @@ char	*get_next_line(int fd)
 	line.data = NULL;
 	line.len = 0;
 	line.cap = 0;
-	ret = parse_line(fd, buffer, &line);
-	if (buffer->len == -1)
+	success = parse_line(fd, buffer, &line);
+	// Début de la section que je veux ajouter
+	if (success && line.cap > line.len + 1)
+		line_realloc(&line, line.len + 1);
+	// Fin de la section que je veux ajouter
+	if (!success)
 	{
 		free(line.data);
 		line.data = NULL;
-		ret = NULL;
 	}
-	if (!ret || buffer->len == 0)
+	if (!success || buffer->len == 0)
 		stash_remove(&stashs_head, fd);
-	return (ret);
+	return (line.data);
 }
-// if (ret && line.cap > line.len + 1)
-// 	line_realloc(&line, line.len + 1);
 
 t_buffer	*get_buffer(t_stash **stashs_head, int fd)
 {
@@ -119,7 +120,7 @@ void	stash_remove(t_stash **stashs_head, int fd)
 	free(next);
 }
 
-char	*parse_line(int fd, t_buffer *buffer, t_line *line)
+bool	parse_line(int fd, t_buffer *buffer, t_line *line)
 {
 	ssize_t	nl_index;
 
@@ -132,17 +133,17 @@ char	*parse_line(int fd, t_buffer *buffer, t_line *line)
 		{
 			line_add(line, buffer, (size_t)(nl_index + 1));
 			if (!line->data)
-				return (NULL);
+				return (false);
 			buffer_move(buffer, (size_t)(nl_index + 1));
-			return (line->data);
+			return (true);
 		}
 		line_add(line, buffer, (size_t)buffer->len);
 		if (!line->data)
-			return (NULL);
+			return (false);
 		buffer_reset(buffer);
 		buffer->len = read(fd, buffer->data, BUFFER_SIZE);
 	}
-	if (buffer->len == -1)
-		return (NULL);
-	return (line->data);
+	if (buffer->len < 0)
+		return (false);
+	return (true);
 }

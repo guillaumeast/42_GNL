@@ -6,7 +6,7 @@
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:01:03 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/13 23:55:01 by gastesan         ###   ########.fr       */
+/*   Updated: 2025/12/14 01:19:56 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ bool	line_realloc(t_line *line, size_t cap)
 		new_data[i] = line->data[i];
 		i++;
 	}
+	new_data[i] = '\0';
 	free(old_data);
 	line->data = new_data;
 	line->len = len_to_copy;
