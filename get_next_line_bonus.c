@@ -12,7 +12,7 @@
 
 // TODO: restore 'static' keywords for local functions
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 t_buffer	*get_buffer(t_stash **stashs_head, int fd);
 t_stash		*stash_add(t_stash **stashs_head, int fd);
