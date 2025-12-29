@@ -28,9 +28,11 @@ This project explores static storage, controlled memory management, and iterativ
 
 ### Repository structure
 
-```
+```bash
 .
 ├── README.md
+├── main.c			# Only for tests
+├── file.txt		# Only for tests
 ├── get_next_line.h
 ├── get_next_line.c
 ├── get_next_line_bonus.h
@@ -57,6 +59,12 @@ When end of file (`EOF`) is reached or if an error occurs, `get_next_line(fd)` w
 
 ### Example
 ```c
+#include "get_next_line_bonus.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 int	main(void)
 {
 	int		fd;
@@ -65,11 +73,12 @@ int	main(void)
 	fd = open("file.txt", O_RDONLY);
 	if (fd == -1)
 		return (1);
-	while (line = get_next_line(fd))
+	while ((line = get_next_line(fd)))
 	{
-		// Do something
+		printf("%s", line);
 		free(line);
 	}
+    close(fd);
 	return (0);
 }
 ```
@@ -138,11 +147,9 @@ This ensures:
 - **O(n)** total complexity per returned line (where *n* is the length of the returned line)  
   _(Each character is copied at most once thanks to exponential buffer growth.)_
 ## 📚 Resources
-- `man 2 read`
+- `man 2 read` (RTFM 🙈)
 - Project subject
 - Norm.v4
-
-> RTFM 🤓
 
 ## 🤖 AI usage notice
 
