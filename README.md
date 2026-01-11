@@ -7,6 +7,8 @@
 [![Bonus](https://img.shields.io/badge/Bonus%20included-YES-darkgreen)](#)
 [![Grade: 125/100](https://img.shields.io/badge/Grade-125%2F100-darkgreen)]()
 
+<img width="144" height="83" alt="gnl" src="https://github.com/user-attachments/assets/601e6b10-b5c7-4176-b275-b08059bbfb5e" />
+
 > After evaluation, I refactored this project and integrated it into my [libft](https://github.com/guillaumeast/42_libft) as a separator-agnostic `get_next_chunk()` function.  
 You can find the detailed _Doxygen_ documentation [here](https://guillaumeast.github.io/42_libft/html/group__gnl.html)
 
