@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gastesan <gastesan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:31:54 by gastesan          #+#    #+#             */
-/*   Updated: 2025/12/14 01:24:12 by gastesan         ###   ########.fr       */
+/*   Updated: 2026/01/11 06:07:14 by gastesan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// TODO: restore 'static' keywords for local functions
-
 #include "get_next_line_bonus.h"
 
-t_buffer	*get_buffer(t_stash **stashs_head, int fd);
-t_stash		*stash_add(t_stash **stashs_head, int fd);
-void		stash_remove(t_stash **stashs_head, int fd);
-bool		parse_line(int fd, t_buffer *buffer, t_line *line);
+static t_buffer	*get_buffer(t_stash **stashs_head, int fd);
+static t_stash	*stash_add(t_stash **stashs_head, int fd);
+static void		stash_remove(t_stash **stashs_head, int fd);
+static bool		parse_line(int fd, t_buffer *buffer, t_line *line);
 
 char	*get_next_line(int fd)
 {
@@ -47,7 +45,7 @@ char	*get_next_line(int fd)
 	return (line.data);
 }
 
-t_buffer	*get_buffer(t_stash **stashs_head, int fd)
+static t_buffer	*get_buffer(t_stash **stashs_head, int fd)
 {
 	t_stash	*stash;
 	t_stash	*new_stash;
@@ -67,7 +65,7 @@ t_buffer	*get_buffer(t_stash **stashs_head, int fd)
 	return (&new_stash->buffer);
 }
 
-t_stash	*stash_add(t_stash **stashs_head, int fd)
+static t_stash	*stash_add(t_stash **stashs_head, int fd)
 {
 	t_stash	*new_stash;
 	t_stash	*last_stash;
@@ -90,7 +88,7 @@ t_stash	*stash_add(t_stash **stashs_head, int fd)
 	return (new_stash);
 }
 
-void	stash_remove(t_stash **stashs_head, int fd)
+static void	stash_remove(t_stash **stashs_head, int fd)
 {
 	t_stash	*stash;
 	t_stash	*next;
@@ -118,7 +116,7 @@ void	stash_remove(t_stash **stashs_head, int fd)
 	free(next);
 }
 
-bool	parse_line(int fd, t_buffer *buffer, t_line *line)
+static bool	parse_line(int fd, t_buffer *buffer, t_line *line)
 {
 	ssize_t	nl_index;
 
