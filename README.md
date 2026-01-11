@@ -7,6 +7,9 @@
 [![Bonus](https://img.shields.io/badge/Bonus%20included-YES-darkgreen)](#)
 [![Grade: 125/100](https://img.shields.io/badge/Grade-125%2F100-darkgreen)]()
 
+> After evaluation, I refactored this project and integrated it to my [libft](https://github.com/guillaumeast/42_libft) as a separator-agnostic `get_next_chunk()` function.  
+You can find the detailed _Doxygen_ documentation [here](https://guillaumeast.github.io/42_libft/html/group__gnl.html)
+
 ## 📋 Table of Contents
 - [📇 Description](#-description)
 - [📖 Instructions](#-instructions)
